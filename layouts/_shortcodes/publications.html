@@ -1,0 +1,6 @@
+{{- /*
+  Lists entries from data/publications.yaml.
+  Usage: {{< publications >}}, {{< publications kind="preprint" >}}
+  or {{< publications kind="poster,talk" >}}
+*/ -}}
+{{ partial "publications.html" (dict "kind" (.Get "kind") "level" 3) }}

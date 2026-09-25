@@ -1,0 +1,20 @@
+{{ define "main" }}
+<div class="wrap">
+  <header class="page-head">
+    <h1 class="page-head__title">{{ .Title | emojify }}</h1>
+    {{- with .Description }}
+    <p class="page-head__desc">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{- with .Content }}
+  <div class="prose page-intro">{{ . }}</div>
+  {{- end }}
+  {{- $paginator := .Paginate .RegularPages.ByDate.Reverse }}
+  {{- with $paginator.Pages }}
+  {{ partial "entry-list.html" (dict "pages" . "level" 2) }}
+  {{- else }}
+  <p class="empty">Nothing here yet.</p>
+  {{- end }}
+  {{- partial "pagination.html" $paginator }}
+</div>
+{{ end }}

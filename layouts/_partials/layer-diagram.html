@@ -1,0 +1,71 @@
+{{- /*
+  The user plane as recursive layers, after the IPC-model figure in
+  content/posts/understanding-network-slicing.
+
+  Horizontal positions are in sixteenths of the diagram width: each system
+  spans 4 units (UE 0–4, gNB 4–8, UPF 8–12, Host 12–16). `nodes` marks where a
+  layer has a process inside a system. `step` orders the entrance animation,
+  bottom layer first. Layer names follow the N / N−1 Layer mapping used in the
+  6G-RUPA papers.
+*/ -}}
+{{- $systems := slice
+  (dict "name" "UE" "role" "phone")
+  (dict "name" "gNB" "role" "base station")
+  (dict "name" "UPF" "role" "core gateway")
+  (dict "name" "Host" "role" "server")
+-}}
+{{- $layers := slice
+  (dict "kind" "base" "label" "radio" "from" 2 "to" 6 "row" 4 "rows" 1 "step" 0)
+  (dict "kind" "base" "label" "transport" "from" 6 "to" 10 "row" 4 "rows" 1 "step" 0)
+  (dict "kind" "base" "label" "data network" "from" 11 "to" 14 "row" 2 "rows" 3 "step" 0)
+  (dict "kind" "rupa" "label" "N−1 Layer (radio)" "from" 0 "to" 6 "row" 3 "rows" 1 "step" 1 "nodes" (slice 2 5))
+  (dict "kind" "rupa" "label" "N−1 Layer (core)" "from" 6 "to" 11 "row" 3 "rows" 1 "step" 1 "nodes" (slice 7 10))
+  (dict "kind" "rupa" "label" "N Layer" "from" 0 "to" 11 "row" 2 "rows" 1 "step" 2 "nodes" (slice 2 6 10))
+  (dict "kind" "pdu" "label" "PDU layer (IP, Ethernet)" "from" 0 "to" 16 "row" 1 "rows" 1 "step" 3 "nodes" (slice 2 10 14))
+-}}
+<figure class="stack">
+  <p class="visually-hidden">
+    Four systems from left to right: a phone (UE), a base station (gNB), a core gateway (UPF) and a server in the data network.
+    An N Layer spans the UE, gNB and UPF. Below it, one N−1 Layer connects the UE to the gNB over the radio link, and another connects the gNB to the UPF across the core network.
+    The PDU layer, IP or Ethernet, runs on top from the UE to the server.
+  </p>
+  <div class="stack__grid" aria-hidden="true">
+    {{- range $i, $s := $systems }}
+    {{- $col := add (mul $i 4) 1 }}
+    <div class="stack__system" style="{{ printf "grid-column:%d/%d" $col (add $col 4) | safeCSS }}"></div>
+    <div class="stack__system-label" style="{{ printf "grid-column:%d/%d" $col (add $col 4) | safeCSS }}">
+      <span class="stack__system-name">{{ $s.name }}</span>
+      <span class="stack__system-role">{{ $s.role }}</span>
+    </div>
+    {{- end }}
+    {{- range $layers }}
+    {{- $l := . }}
+    <div class="stack__layer stack__layer--{{ .kind }}" style="{{ printf "grid-column:%d/%d;grid-row:%d/span %d;--step:%d" (add .from 1) (add .to 1) .row .rows .step | safeCSS }}">
+      <span>{{ .label }}</span>
+      {{- range .nodes }}
+      {{- $p := div (float (sub . $l.from)) (sub $l.to $l.from) }}
+      <i class="stack__node" style="{{ printf "--p:%.4f" $p | safeCSS }}"></i>
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+
+  <dl class="stack__legend">
+    <div>
+      <dt><span class="swatch swatch--rupa"></span>6G-RUPA layers</dt>
+      <dd>The same kind of layer at different scopes. The N Layer carries the phone’s traffic from UE to UPF with one protocol, EFCP, where 5G splits the job between SDAP/PDCP on the radio side and GTP-U in the core. Beneath it, one N−1 Layer covers the radio hop and another the core network.</dd>
+    </div>
+    <div>
+      <dt><span class="swatch swatch--pdu"></span>PDU layer</dt>
+      <dd>IP or Ethernet, the connectivity applications see.</dd>
+    </div>
+    <div>
+      <dt><span class="swatch swatch--base"></span>Existing links</dt>
+      <dd>Whatever radio, transport and data-network technology is already in place.</dd>
+    </div>
+  </dl>
+  <figcaption>
+    The mobile user plane drawn as recursive layers. Adapted from
+    {{ with site.GetPage "/posts/understanding-network-slicing" }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ else }}our article on network slicing{{ end }}.
+  </figcaption>
+</figure>

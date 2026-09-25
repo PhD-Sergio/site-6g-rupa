@@ -1,0 +1,35 @@
+{{ define "main" }}
+{{- $showDate := and (not .Date.IsZero) (ne .Params.showDate false) }}
+{{- $toc := "" }}
+{{- if ne .Params.showTableOfContents false }}
+  {{- if ge (len (findRE `<li>` .TableOfContents)) 3 }}{{ $toc = .TableOfContents }}{{ end }}
+{{- end }}
+<article class="wrap article">
+  <header class="article__header">
+    {{- with .Parent }}{{ if not .IsHome }}
+    <p class="kicker"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></p>
+    {{- end }}{{ end }}
+    <h1 class="article__title">{{ .Title | emojify }}</h1>
+    {{- with .Description }}
+    <p class="article__standfirst">{{ . }}</p>
+    {{- end }}
+    {{- if $showDate }}
+    <p class="article__meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format (site.Params.dateFormat | default "2 January 2006") }}</time>{{ if gt .ReadingTime 0 }}, {{ .ReadingTime }} min read{{ end }}
+    </p>
+    {{- end }}
+  </header>
+  <div class="article__layout{{ if $toc }} article__layout--toc{{ end }}{{ if .Params.wide }} article__layout--wide{{ end }}">
+    <div class="prose">
+      {{ .Content }}
+    </div>
+    {{- with $toc }}
+    <nav class="toc" aria-labelledby="toc-title">
+      <p class="toc__title" id="toc-title">On this page</p>
+      {{ . }}
+    </nav>
+    {{- end }}
+  </div>
+  {{- partial "article-pager.html" . }}
+</article>
+{{ end }}

@@ -1,0 +1,8 @@
+{{- /*
+  A highlighted note.
+  Usage: {{< alert >}}Markdown content{{< /alert >}}
+  Accepts the old theme's icon argument ({{< alert "pencil" >}}) and ignores it.
+*/ -}}
+<aside class="callout">
+  {{ .Inner | .Page.RenderString (dict "display" "block") }}
+</aside>

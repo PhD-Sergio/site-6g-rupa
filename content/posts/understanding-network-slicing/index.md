@@ -27,7 +27,7 @@ If we look at the same idea through the IPC model lens, it maps cleanly to a rec
 
 Concretely, the mental model used later in this post is:
 
-- At the "service" level (what we call the N-DIF layer in IPC terms), the UE has one or more PDU sessions / PDU flows.
+- At the "service" level (what we call the N Layer in IPC terms), the UE has one or more PDU sessions / PDU flows.
 - These are mapped onto lower-layer transport constructs. In 3GPP jargon you will see **QoS flows** (core side) and **data radio bearers (DRBs)** (radio side).
 
 The details vary by deployment, but the important point is that there are multiple layers where *policy* can decide how traffic is treated, without necessarily changing forwarding.
@@ -59,7 +59,7 @@ The PLMNO's flow allocator can then enforce slice policies such as:
 - Does the requested QoS profile fit the service agreement for this slice?
 - Has this slice exceeded configured caps (e.g., number of sessions, throughput, aggregate resource usage)?
 
-If the checks pass, the allocator creates the flow and maps it onto the underlying (N-1) DIFs (radio and core).
+If the checks pass, the allocator creates the flow and maps it onto the underlying N-1 Layers (radio and core).
 
 Crucially, at the level of **forwarding state**, slicing often does not require new forwarding entries. If two flows have the same (topological) destination, they can still be aggregated under the same forwarding-table entry. The forwarding function (e.g., the RMT in RINA terms) does not need to understand MVNOs, NSI IDs, or "slices"; it only needs to forward.
 

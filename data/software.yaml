@@ -1,0 +1,81 @@
+# Software and datasets.
+#
+# Shown on /research/ via the {{< software >}} shortcode, in the order written
+# here. `label` is the text shown above the name. Zenodo links use the concept
+# DOI, which always resolves to the latest version.
+#
+# `kind: data` marks a dataset; datasets are listed after the software, as
+# compact text cards.
+#
+# Pictures live under assets/: `logo` replaces the name when set, `image` is
+# the screenshot, `video` (optional) plays in place of it on hover, and
+# `fit: contain` shows the whole image instead of filling the frame.
+# `demo` is a live demo: the screenshot opens it instead of `url`.
+
+- name: LEOPath
+  label: Software, Python
+  url: https://github.com/Fundacio-i2CAT/LEOPath
+  logo: img/research/leopath-logo.png
+  image: img/research/leopath-demo.png
+  video: video/leopath-demo.mp4
+  demo: https://fundacio-i2cat.github.io/LEOPath/cesium/
+  description: >-
+    Simulator for comparing routing algorithms in LEO satellite
+    constellations: realistic orbits, links that change over time and
+    pluggable routing, including 6G-RUPA topological routing.
+  links:
+    - name: Live demo
+      url: https://fundacio-i2cat.github.io/LEOPath/cesium/
+    - name: GitHub
+      url: https://github.com/Fundacio-i2CAT/LEOPath
+    - name: PyPI
+      url: https://pypi.org/project/leopath/
+    - name: Zenodo
+      url: https://doi.org/10.5281/zenodo.20744447
+    - name: Announcement
+      url: /news/20260209-leopath-simulator/
+
+- name: PLMN-GraphSim
+  label: Software, Julia
+  url: https://github.com/Fundacio-i2CAT/PLMN-GraphSim
+  image: img/research/plmn-graphsim-spain.png
+  fit: contain
+  description: >-
+    Discrete-event simulator that runs over national-scale mobile operator
+    network graphs (Spain and the USA) to compare forwarding state, UPF
+    placement and handovers in 5G and 6G-RUPA.
+  links:
+    - name: GitHub
+      url: https://github.com/Fundacio-i2CAT/PLMN-GraphSim
+    - name: Documentation
+      url: https://docs.plmngraphsim.org
+    - name: Zenodo
+      url: https://doi.org/10.5281/zenodo.20926232
+
+- name: NTN LEO Satellite Routing Evaluation Data
+  kind: data
+  label: Dataset
+  url: https://doi.org/10.5281/zenodo.20744445
+  description: >-
+    Forwarding-state, routing-update, stability, delivery and path-stretch
+    results for link-state, topological and explicit-path routing across
+    Starlink, OneWeb, Kuiper and Telesat, generated with LEOPath. Supports the
+    topological forwarding preprint.
+  links:
+    - name: Zenodo
+      url: https://doi.org/10.5281/zenodo.20744445
+    - name: GitHub
+      url: https://github.com/PhD-Sergio/data-ntn-topological-evaluation
+
+- name: PLMN-GraphSim Dataset
+  kind: data
+  label: Dataset
+  url: https://doi.org/10.34810/data3210
+  description: >-
+    Processed demographics and cellular-network topology for Spain and the
+    USA (from INE, the US Census Bureau and OpenCellID), used as input to
+    PLMN-GraphSim to reproduce the experiments in the Beyond 5G
+    architectural constraints preprint.
+  links:
+    - name: CORA
+      url: https://doi.org/10.34810/data3210

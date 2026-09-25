@@ -19,22 +19,22 @@
   {{- end -}}
 {{- end -}}
 
-<section class="pdf-card" aria-label="{{ $title }}">
-  <div class="pdf-card__header">
-    <div class="pdf-card__title">{{ $title }}</div>
-    <div class="pdf-card__actions">
-      <a class="pdf-button" href="{{ $url }}" target="_blank" rel="noopener">Open</a>
-      <a class="pdf-button pdf-button--primary" href="{{ $url }}" download>Download</a>
+<section class="pdf" aria-label="{{ $title }}">
+  <div class="pdf__header">
+    <p class="pdf__title">{{ $title }}</p>
+    <div class="pdf__actions">
+      <a class="button button--small" href="{{ $url }}" target="_blank" rel="noopener">Open</a>
+      <a class="button button--small button--primary" href="{{ $url }}" download>Download</a>
     </div>
   </div>
 
-  <div class="pdf-embed" style="--pdf-height: {{ $height }}px">
+  <div class="pdf__embed" style="--pdf-height: {{ $height }}px">
     <object data="{{ $url }}" type="application/pdf" aria-label="{{ $title }} preview">
       <iframe src="{{ $url }}" title="{{ $title }} preview" loading="lazy"></iframe>
     </object>
   </div>
 
-  <div class="pdf-card__hint">
-    If the preview does not load in your browser, use <a href="{{ $url }}" target="_blank" rel="noopener">Open</a> or <a href="{{ $url }}" download>Download</a>.
-  </div>
+  <p class="pdf__hint">
+    If the preview doesn’t load in your browser, use <a href="{{ $url }}" target="_blank" rel="noopener">Open</a> or <a href="{{ $url }}" download>Download</a>.
+  </p>
 </section>

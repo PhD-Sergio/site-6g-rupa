@@ -1,0 +1,30 @@
+{{- /*
+  A responsive WebP <img> from an image resource.
+  Params:
+    img     image resource (required)
+    widths  candidate widths in px, default (slice 320 640 960); never upscaled
+    sizes   the sizes attribute, default "100vw"
+    alt     alt text, default ""
+    class   optional class
+    eager   true to load immediately instead of lazily
+*/ -}}
+{{- $img := .img -}}
+{{- $widths := .widths | default (slice 320 640 960) -}}
+{{- $srcset := slice -}}
+{{- $fallback := "" -}}
+{{- range $widths -}}
+  {{- $w := math.Min . $img.Width | int -}}
+  {{- $r := $img.Resize (printf "%dx webp q80" $w) -}}
+  {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink $r.Width) -}}
+  {{- if not $fallback }}{{ $fallback = $r }}{{ end -}}
+{{- end -}}
+<img
+  {{- with .class }} class="{{ . }}"{{ end }}
+  src="{{ $fallback.RelPermalink }}"
+  srcset="{{ delimit (uniq $srcset) ", " }}"
+  sizes="{{ .sizes | default "100vw" }}"
+  width="{{ $fallback.Width }}"
+  height="{{ $fallback.Height }}"
+  alt="{{ .alt }}"
+  {{- if not .eager }} loading="lazy"{{ end }}
+  decoding="async">

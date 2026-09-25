@@ -1,0 +1,62 @@
+{{- /*
+  Entries from data/publications.yaml.
+  Params:
+    kind         optional filter, one kind or several separated by commas ("poster,talk")
+    newestFirst  sort by year, newest first, instead of file order
+    level        title heading level, default 3
+
+  An entry's picture (`image`) links to the same place as its title (`url`),
+  so it is hidden from assistive tech and the tab order; the title link is the
+  accessible one. Videos are the exception: their play control is the only
+  way to start them.
+*/ -}}
+{{- $items := (partialCached "data.html" .).publications -}}
+{{- with .kind }}{{ $items = where $items "kind" "in" (split (replace . " " "") ",") }}{{ end -}}
+{{- if .newestFirst }}{{ $items = sort $items "year" "desc" }}{{ end -}}
+{{- $level := .level | default 3 -}}
+{{- with $items }}
+<ul class="pubs">
+  {{- range . }}
+  {{- $item := . }}
+  {{- $visual := .visual | default "page" }}
+  {{- $img := "" }}{{ with .image }}{{ $img = resources.Get . }}{{ end }}
+  <li class="pub{{ if $img }} pub--{{ $visual }}{{ end }}">
+    {{- if $img }}
+      {{- if eq $visual "video" }}
+    {{ partial "video-facade.html" (dict "item" $item) }}
+      {{- else }}
+    <a class="pub__visual" href="{{ $item.url | relURL }}" tabindex="-1" aria-hidden="true">
+      <span class="pub__sheet">
+        {{- if eq $visual "figure" }}
+        {{- partial "img.html" (dict "img" $img "widths" (slice 480 960) "sizes" "(min-width: 64rem) 23rem, (min-width: 40rem) 16rem, 90vw") }}
+        {{- else }}
+        {{- partial "img.html" (dict "img" $img "widths" (slice 320 640) "sizes" "(min-width: 64rem) 17rem, (min-width: 40rem) 12rem, 60vw") }}
+        {{- end }}
+      </span>
+    </a>
+      {{- end }}
+    {{- end }}
+    <div class="pub__body">
+      <p class="pub__meta">
+        {{ .label }}, {{ .year }}
+        {{- with .note }} <span class="pub__note">{{ . }}</span>{{ end }}
+      </p>
+      <h{{ $level }} class="pub__title">
+        {{- with .url }}<a href="{{ . | relURL }}">{{ end }}{{ .title }}{{ with .url }}</a>{{ end -}}
+      </h{{ $level }}>
+      <p class="pub__authors">{{ delimit .authors ", " }}</p>
+      {{- with .venue }}
+      <p class="pub__venue">{{ . | markdownify }}</p>
+      {{- end }}
+      {{- with .links }}
+      <ul class="pub__links">
+        {{- range . }}
+        <li><a href="{{ .url | relURL }}">{{ .name }}</a></li>
+        {{- end }}
+      </ul>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>
+{{- end }}

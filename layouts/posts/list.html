@@ -1,85 +1,17 @@
 {{ define "main" }}
-<div class="max-w-prose mx-auto flex flex-col gap-10 px-4 md:px-0">
-
-    <header class="flex flex-col items-center mb-4">
-        <h1 class="text-4xl font-bold text-neutral-900 dark:text-neutral">
-            {{ .Title }}
-        </h1>
-        <div class="text-xl text-neutral-500 dark:text-neutral-400 mt-2">
-            {{ .Description }}
-        </div>
-    </header>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-
-        {{/* Articles Column */}}
-        <div class="flex flex-col gap-6">
-            <div
-                class="flex items-center gap-2 border-b-2 border-primary-500 pb-2 mb-4">
-                <span class="text-2xl">📝</span>
-                <h2
-                    class="text-2xl font-bold text-neutral-900 dark:text-neutral">Articles</h2>
-            </div>
-
-            {{ $articles := where .RegularPages "Params.categories" "intersect"
-            (slice "Article" "article") }}
-            {{ range $articles }}
-            <a href="{{ .RelPermalink }}"
-                class="group relative flex flex-col gap-2 p-4 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200">
-                <h3
-                    class="text-xl font-bold text-neutral-900 dark:text-neutral group-hover:text-primary-600 dark:group-hover:text-primary-400">
-                    {{ .Title }}
-                </h3>
-                <div class="text-sm text-neutral-500 dark:text-neutral-400">
-                    {{ .Date | time.Format ":date_medium" }}
-                </div>
-                {{ if .Description }}
-                <p class="text-neutral-600 dark:text-neutral-300 line-clamp-3">
-                    {{ .Description }}
-                </p>
-                {{ end }}
-            </a>
-            {{ end }}
-
-            {{ if eq (len $articles) 0 }}
-            <p class="text-neutral-500 italic">No articles yet.</p>
-            {{ end }}
-        </div>
-
-        {{/* News Column */}}
-        <div class="flex flex-col gap-6">
-            <div
-                class="flex items-center gap-2 border-b-2 border-secondary-500 pb-2 mb-4">
-                <span class="text-2xl">📰</span>
-                <h2
-                    class="text-2xl font-bold text-neutral-900 dark:text-neutral">News</h2>
-            </div>
-
-            {{ $news := where .RegularPages "Params.categories" "intersect"
-            (slice "News" "news") }}
-            {{ range $news }}
-            <a href="{{ .RelPermalink }}"
-                class="group relative flex flex-col gap-2 p-4 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200">
-                <h3
-                    class="text-xl font-bold text-neutral-900 dark:text-neutral group-hover:text-secondary-600 dark:group-hover:text-secondary-400">
-                    {{ .Title }}
-                </h3>
-                <div class="text-sm text-neutral-500 dark:text-neutral-400">
-                    {{ .Date | time.Format ":date_medium" }}
-                </div>
-                {{ if .Description }}
-                <p class="text-neutral-600 dark:text-neutral-300 line-clamp-3">
-                    {{ .Description }}
-                </p>
-                {{ end }}
-            </a>
-            {{ end }}
-
-            {{ if eq (len $news) 0 }}
-            <p class="text-neutral-500 italic">No updates yet.</p>
-            {{ end }}
-        </div>
-
-    </div>
+{{- /* Only long-form articles; news items live in the news section. */}}
+{{- $articles := where .RegularPages "Params.categories" "intersect" (slice "Article" "article") }}
+<div class="wrap">
+  <header class="page-head">
+    <h1 class="page-head__title">{{ .Title | emojify }}</h1>
+    {{- with .Description }}
+    <p class="page-head__desc">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{- with $articles }}
+  {{ partial "entry-list.html" (dict "pages" .ByDate.Reverse "level" 2) }}
+  {{- else }}
+  <p class="empty">No articles yet.</p>
+  {{- end }}
 </div>
 {{ end }}

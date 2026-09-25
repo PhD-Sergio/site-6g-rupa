@@ -1,0 +1,86 @@
+{{ define "main" }}
+{{- $publications := (partialCached "data.html" .).publications }}
+{{- $paper := index (where $publications "kind" "paper") 0 }}
+<section class="hero wrap">
+  <h1 class="hero__title">
+    <span class="hero__name">{{ site.Params.brand | default site.Title }}</span>
+    <span class="hero__expansion">{{ .Title }}</span>
+  </h1>
+  <div class="hero__body">
+    <div class="hero__text">
+      {{- with .Params.deck }}
+      <p class="hero__deck">{{ . }}</p>
+      {{- end }}
+      <div class="hero__intro">{{ .Content }}</div>
+      <p class="hero__actions">
+        {{- with $paper }}
+        <a class="button button--primary" href="{{ .url }}">Read the position paper</a>
+        {{- end }}
+        {{- with site.GetPage "/about" }}
+        <a class="button" href="{{ .RelPermalink }}">About the project</a>
+        {{- end }}
+      </p>
+    </div>
+    {{ partial "layer-diagram.html" . }}
+  </div>
+</section>
+
+{{- $talk := "" }}
+{{- range where $publications "kind" "talk" }}{{ if and (not $talk) .youtube }}{{ $talk = . }}{{ end }}{{ end }}
+{{- with $talk }}
+<section class="wrap" aria-labelledby="home-seminar">
+  <div class="band">
+    <h2 class="band__title" id="home-seminar">Seminar</h2>
+    <div class="seminar">
+      {{ partial "video-facade.html" (dict "item" .) }}
+      <h3 class="seminar__title"><a href="{{ .url }}">{{ .title }}</a></h3>
+      <p class="seminar__meta">{{ delimit .authors ", " }}. {{ .venue }}.</p>
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{- $news := (where site.RegularPages "Section" "news").ByDate.Reverse }}
+{{- with $news }}
+<section class="wrap" aria-labelledby="home-news">
+  <div class="band">
+    <h2 class="band__title" id="home-news">News</h2>
+    <div>
+      {{ partial "entry-list.html" (dict "pages" (first 4 .)) }}
+      {{- with site.GetPage "/news" }}
+      <p class="more"><a href="{{ .RelPermalink }}">All news</a></p>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{- with $publications }}
+<section class="wrap" aria-labelledby="home-publications">
+  <div class="band">
+    <h2 class="band__title" id="home-publications">Publications</h2>
+    <div>
+      {{ partial "publications.html" (dict "kind" "paper,preprint" "newestFirst" true) }}
+      {{- with site.GetPage "/research" }}
+      <p class="more"><a href="{{ .RelPermalink }}">All research</a></p>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{- $articles := where (where site.RegularPages "Section" "posts") "Params.categories" "intersect" (slice "Article" "article") }}
+{{- with $articles }}
+<section class="wrap" aria-labelledby="home-articles">
+  <div class="band">
+    <h2 class="band__title" id="home-articles">Articles</h2>
+    <div>
+      {{ partial "entry-list.html" (dict "pages" (first 3 .ByDate.Reverse)) }}
+      {{- with site.GetPage "/posts" }}
+      <p class="more"><a href="{{ .RelPermalink }}">All articles</a></p>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+{{ end }}

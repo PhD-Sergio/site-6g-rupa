@@ -1,0 +1,23 @@
+{{- /*
+  A YouTube video that loads nothing from YouTube until the reader presses
+  play: a local poster image and a link to the video. assets/js/site.js swaps
+  the link for a privacy-enhanced (youtube-nocookie) player on click.
+  Params: item (publication entry with youtube, title, image, duration).
+*/ -}}
+{{- $item := .item -}}
+{{- with resources.Get $item.image }}
+<div class="video">
+  <a class="video__link" href="https://www.youtube.com/watch?v={{ $item.youtube }}"
+     data-youtube="{{ $item.youtube }}" data-title="{{ $item.title }}"
+     aria-label="Play video: {{ $item.title }}{{ with $item.duration }} ({{ . }}){{ end }}">
+    {{- partial "img.html" (dict "img" . "widths" (slice 480 960 1280) "sizes" "(min-width: 64rem) 44rem, 100vw") }}
+    <span class="video__button" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>
+    </span>
+    <span class="video__source" aria-hidden="true">Plays from YouTube</span>
+    {{- with $item.duration }}
+    <span class="video__duration" aria-hidden="true">{{ . }}</span>
+    {{- end }}
+  </a>
+</div>
+{{- end }}

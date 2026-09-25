@@ -1,0 +1,84 @@
+{{- /*
+  Entries from data/software.yaml: software as rows with a screenshot, then
+  datasets (`kind: data`) as compact text cards.
+  Params: level (name heading level, default 3).
+
+  The screenshot links to the live demo when there is one, otherwise to the
+  same place as the name. With `video`, a muted loop plays over the
+  screenshot while the entry is hovered or focused (see assets/js/site.js).
+*/ -}}
+{{- $level := .level | default 3 -}}
+{{- $all := (partialCached "data.html" .).software -}}
+{{- $software := where $all "kind" "!=" "data" -}}
+{{- $data := where $all "kind" "data" -}}
+{{- with $software }}
+<ul class="sw-list">
+  {{- range . }}
+  {{- $item := . }}
+  {{- $img := "" }}{{ with .image }}{{ $img = resources.Get . }}{{ end }}
+  {{- $video := "" }}{{ with .video }}{{ $video = resources.Get . }}{{ end }}
+  {{- $logo := "" }}{{ with .logo }}{{ $logo = resources.Get . }}{{ end }}
+  <li class="sw{{ if $img }} sw--media{{ end }}"{{ if $video }} data-hover-video{{ end }}>
+    {{- with $img }}
+    {{- if $item.demo }}
+    {{- /* The live demo has no other entry point on the image, so keep it reachable. */}}
+    <a class="sw__media{{ if eq $item.fit "contain" }} sw__media--contain{{ end }}" href="{{ $item.demo }}" aria-label="Open the {{ $item.name }} live demo">
+    {{- else }}
+    <a class="sw__media{{ if eq $item.fit "contain" }} sw__media--contain{{ end }}" href="{{ $item.url | relURL }}" tabindex="-1" aria-hidden="true">
+    {{- end }}
+      {{- partial "img.html" (dict "img" . "widths" (slice 480 960) "sizes" "(min-width: 64rem) 26rem, (min-width: 48rem) 20rem, 100vw") }}
+      {{- with $video }}
+      <video muted loop playsinline preload="none" src="{{ .RelPermalink }}"></video>
+      {{- end }}
+      {{- if $item.demo }}
+      <span class="sw__badge" aria-hidden="true">Live demo</span>
+      {{- end }}
+    </a>
+    {{- end }}
+    <div class="sw__body">
+      <p class="pub__meta">{{ .label }}</p>
+      <h{{ $level }} class="sw__name">
+        {{- with .url }}<a href="{{ . | relURL }}">{{ end -}}
+        {{- with $logo -}}
+          {{- $l := .Resize "320x webp q85" -}}
+          <img class="sw__logo" src="{{ $l.RelPermalink }}" width="{{ $l.Width }}" height="{{ $l.Height }}" alt="{{ $item.name }}">
+        {{- else -}}
+          {{ $item.name }}
+        {{- end -}}
+        {{- with .url }}</a>{{ end -}}
+      </h{{ $level }}>
+      {{- with .description }}
+      <p class="pub__desc">{{ . }}</p>
+      {{- end }}
+      {{- with .links }}
+      <ul class="pub__links">
+        {{- range . }}
+        <li><a href="{{ .url | relURL }}">{{ .name }}</a></li>
+        {{- end }}
+      </ul>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>
+{{- end }}
+{{- with $data }}
+<ul class="data-list">
+  {{- range . }}
+  <li class="data">
+    <p class="pub__meta">{{ .label }}</p>
+    <h{{ $level }} class="data__name">{{ with .url }}<a href="{{ . | relURL }}">{{ end }}{{ .name }}{{ with .url }}</a>{{ end }}</h{{ $level }}>
+    {{- with .description }}
+    <p class="pub__desc">{{ . }}</p>
+    {{- end }}
+    {{- with .links }}
+    <ul class="pub__links">
+      {{- range . }}
+      <li><a href="{{ .url | relURL }}">{{ .name }}</a></li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </li>
+  {{- end }}
+</ul>
+{{- end }}

@@ -1,0 +1,35 @@
+{{- /* Links to the neighbouring entries of a dated section (news, articles). */ -}}
+{{- if and .IsPage (in (slice "news" "posts") .Section) }}
+  {{- $list := .CurrentSection.RegularPages }}
+  {{- if eq .Section "posts" }}
+    {{- $list = where $list "Params.categories" "intersect" (slice "Article" "article") }}
+  {{- end }}
+  {{- $older := "" }}
+  {{- $newer := "" }}
+  {{- $found := false }}
+  {{- range $list.ByDate }}
+    {{- if $found }}
+      {{- if not $newer }}{{ $newer = . }}{{ end }}
+    {{- else if eq .RelPermalink $.RelPermalink }}
+      {{- $found = true }}
+    {{- else }}
+      {{- $older = . }}
+    {{- end }}
+  {{- end }}
+  {{- if and $found (or $older $newer) }}
+<nav class="pager" aria-label="More {{ lower .CurrentSection.LinkTitle }}">
+  {{- with $older }}
+  <a class="pager__link" href="{{ .RelPermalink }}" rel="prev">
+    <span class="pager__label">Older</span>
+    <span class="pager__title">{{ .LinkTitle }}</span>
+  </a>
+  {{- end }}
+  {{- with $newer }}
+  <a class="pager__link pager__link--newer" href="{{ .RelPermalink }}" rel="next">
+    <span class="pager__label">Newer</span>
+    <span class="pager__title">{{ .LinkTitle }}</span>
+  </a>
+  {{- end }}
+</nav>
+  {{- end }}
+{{- end }}

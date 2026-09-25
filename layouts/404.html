@@ -1,0 +1,11 @@
+{{ define "main" }}
+<div class="wrap">
+  <header class="page-head">
+    <h1 class="page-head__title">Page not found</h1>
+    <p class="page-head__desc">
+      This page doesn’t exist or has moved. Try the <a href="{{ "/" | relURL }}">home page</a>
+      or the <a href="{{ "news/" | relURL }}">latest news</a>.
+    </p>
+  </header>
+</div>
+{{ end }}

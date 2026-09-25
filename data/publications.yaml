@@ -1,0 +1,121 @@
+# Papers, preprints, posters and talks.
+#
+# Shown on /research/ (via the {{< publications >}} shortcode, filtered by
+# `kind`) and on the home page (papers and preprints). Entries appear in the
+# order written here, so keep each kind newest first.
+#
+# kind: paper, preprint, poster or talk. `label` is the text shown for it.
+# `venue` accepts Markdown (e.g. *Journal name* for italics).
+# `url` is where clicking the title or the picture takes the reader.
+# `image` (under assets/) is the picture; `visual` sets how it is drawn:
+#   page (a page on a stack of pages), poster (a single sheet), figure, or
+#   video (with `youtube`, the video id, and `duration`).
+# Zenodo links use the concept DOI, which always resolves to the latest version.
+
+- kind: paper
+  label: Journal article
+  year: 2024
+  title: "6G-RUPA: A Flexible, Scalable, and Energy-Efficient User Plane Architecture for Next-Generation Mobile Networks"
+  authors:
+    - Sergio Giménez-Antón
+    - Eduard Grasa
+    - Jordi Perelló
+    - Andrés Cárdenas
+  venue: "*Computers* 13, no. 8: 186. MDPI"
+  note: Cover article
+  url: https://doi.org/10.3390/computers13080186
+  image: img/research/pub-computers-2024.png
+  visual: page
+  links:
+    - name: DOI 10.3390/computers13080186
+      url: https://doi.org/10.3390/computers13080186
+    - name: Announcement
+      url: /news/20240716-mdpi-computers-journal/
+
+- kind: preprint
+  label: Preprint
+  year: 2026
+  title: "Topological Forwarding for LEO Constellations: A Scope-Specific Routing Policy in a Recursive User-Plane Architecture"
+  authors:
+    - Sergio Giménez-Antón
+    - Eduard Grasa
+    - Jordi Perelló
+    - Maryan Rizinski
+    - Mohammadreza Mosahebfard
+    - John Day
+    - Lubomir Chitkushev
+  venue: SSRN and Zenodo
+  url: https://zenodo.org/records/20920699/files/main.pdf
+  image: img/research/pub-leo-topological-2026.png
+  visual: page
+  links:
+    - name: SSRN
+      url: https://doi.org/10.2139/ssrn.7163182
+    - name: PDF on Zenodo
+      url: https://doi.org/10.5281/zenodo.20920698
+    - name: Evaluation data
+      url: https://doi.org/10.5281/zenodo.20744445
+
+- kind: preprint
+  label: Preprint
+  year: 2026
+  title: "Beyond 5G Architectural Constraints: Designing Scalable-by-Design User Planes for Mobile Networks via 6G-RUPA"
+  authors:
+    - Sergio Giménez-Antón
+    - Eduard Grasa
+    - John Day
+    - Maryan Rizinski
+    - Lubomir Chitkushev
+    - Jordi Perelló
+  venue: Recercat
+  url: https://hdl.handle.net/2072/489603
+  image: img/research/pub-mno-scalability-2026.png
+  visual: figure
+  links:
+    - name: Recercat
+      url: https://hdl.handle.net/2072/489603
+    - name: Dataset on CORA
+      url: https://doi.org/10.34810/data3210
+
+- kind: poster
+  label: Poster
+  year: 2026
+  title: "Rethinking NTN Architecture: Leveraging 6G-RUPA for Scalable and Energy-Efficient LEO Networks"
+  authors:
+    - Sergio Giménez-Antón
+    - Eduard Grasa
+    - Jordi Perelló
+    - John Day
+    - Maryan Rizinski
+    - Lou Chitkushev
+  venue: SNS4SNS 2026, Sophia Antipolis
+  url: /news/20260206-sns4sns-poster-sophia-antipolis/sns4sns_poster_6grupa_ntn.pdf
+  image: img/research/poster-sns4sns-2026.png
+  visual: poster
+  links:
+    - name: Poster (PDF)
+      url: /news/20260206-sns4sns-poster-sophia-antipolis/sns4sns_poster_6grupa_ntn.pdf
+    - name: Zenodo
+      url: https://doi.org/10.5281/zenodo.20916628
+    - name: Summary
+      url: /news/20260206-sns4sns-poster-sophia-antipolis/
+
+- kind: talk
+  label: Seminar
+  year: 2025
+  title: "Improving 5G Scalability Using 6G-RUPA"
+  authors:
+    - Sergio Giménez-Antón
+  venue: Boston University, Fall 2025
+  url: https://www.youtube.com/watch?v=19YaJ6ufPfw
+  image: img/research/talk-bu-2025.jpg
+  visual: video
+  youtube: 19YaJ6ufPfw
+  duration: 27 min
+  links:
+    - name: YouTube
+      url: https://www.youtube.com/watch?v=19YaJ6ufPfw
+    - name: Video on Zenodo
+      url: https://doi.org/10.5281/zenodo.20917836
+    - name: Related preprint
+      url: https://hdl.handle.net/2072/489603

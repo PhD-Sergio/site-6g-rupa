@@ -1,0 +1,23 @@
+{{- $page := . -}}
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="{{ "/" | relURL }}"{{ if .IsHome }} aria-current="page"{{ end }}>
+      {{- partial "mark.html" . -}}
+      <span class="brand__name">{{ site.Params.brand | default site.Title }}</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        {{- range site.Menus.main }}
+        {{- $current := or ($page.IsMenuCurrent "main" .) ($page.HasMenuCurrent "main" .) }}
+        <li><a href="{{ .URL }}"{{ if $current }} aria-current="{{ cond ($page.IsMenuCurrent "main" .) "page" "true" }}"{{ end }}>{{ .Name }}</a></li>
+        {{- end }}
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Dark theme" title="Switch between light and dark">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M12 3.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor"/>
+      </svg>
+    </button>
+  </div>
+</header>

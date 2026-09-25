@@ -1,0 +1,18 @@
+{{- /*
+  A dated list of pages.
+  Params: pages (required), level (heading level of each title, default 3).
+*/ -}}
+{{- $level := .level | default 3 -}}
+<ul class="entries">
+  {{- range .pages }}
+  <li class="entry">
+    <time class="entry__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+    <div>
+      <h{{ $level }} class="entry__title"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h{{ $level }}>
+      {{- with .Description | default (.Summary | plainify | truncate 180) }}
+      <p class="entry__desc">{{ . }}</p>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>

@@ -1,0 +1,21 @@
+{{- $brand := site.Params.brand | default site.Title -}}
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <p class="site-footer__about">
+      {{ $brand }} is a PhD research project by
+      {{ with site.Params.author.url }}<a href="{{ . }}">{{ site.Params.author.name }}</a>{{ else }}{{ site.Params.author.name }}{{ end }}.
+    </p>
+    <ul class="site-footer__links">
+      {{- with site.Params.contact.email }}
+      <li><a href="mailto:{{ . }}">{{ . }}</a></li>
+      {{- end }}
+      {{- with site.Params.contact.linkedin }}
+      <li><a href="{{ . }}">LinkedIn</a></li>
+      {{- end }}
+      {{- with site.Home.OutputFormats.Get "rss" }}
+      <li><a href="{{ .RelPermalink }}">RSS feed</a></li>
+      {{- end }}
+    </ul>
+    <p class="site-footer__copy">&copy; {{ now.Year }} {{ $brand }}</p>
+  </div>
+</footer>

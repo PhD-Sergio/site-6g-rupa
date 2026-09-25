@@ -1,6 +1,4 @@
 ---
-title: "🗞 News & Updates"
-showTableOfContents: false
-showDate: false
-layout: "list"
+title: "News"
+description: "Publications, talks, software releases and other milestones from the project."
 ---
