@@ -6,7 +6,8 @@
 # A page can override it with `image` in its front matter.
 ogImage = "img/og.png"
 
+# Per-site Plausible >= 3.1 script: tracking options live in Plausible's
+# Site Settings -> Site installation.
 [plausibleAnalytics]
   domain = "6grupa.com"
-  event = "https://plausible.sergiogimenez.com/api/event"
-  script = "https://plausible.sergiogimenez.com/js/script.js"
+  script = "https://plausible.sergiogimenez.com/js/pa-vBZ3rp81OJbEMrQ5ePVzX.js"

@@ -61,12 +61,14 @@
 {{- end }}
 
 {{- if hugo.IsProduction }}
-{{- with site.Params.plausibleAnalytics }}{{ with .domain }}
-<script
-  defer
-  data-domain="{{ . }}"
-  data-api="{{ $.Site.Params.plausibleAnalytics.event | default "https://plausible.io/api/event" }}"
-  src="{{ $.Site.Params.plausibleAnalytics.script | default "https://plausible.io/js/script.js" }}"
-></script>
-{{- end }}{{ end }}
+{{- with site.Params.plausibleAnalytics.script }}
+<script async src="{{ . }}"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+{{- if eq $.Kind "404" }}
+<script>plausible("404",{props:{path:document.location.pathname}})</script>
+{{- end }}
+{{- end }}
 {{- end }}
