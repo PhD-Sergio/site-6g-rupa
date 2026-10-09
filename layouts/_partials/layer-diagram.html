@@ -4,30 +4,32 @@
 
   Horizontal positions are in sixteenths of the diagram width: each system
   spans 4 units (UE 0–4, gNB 4–8, UPF 8–12, Host 12–16). `nodes` marks where a
-  layer has a process inside a system. `step` orders the entrance animation,
-  bottom layer first. Layer names follow the N / N−1 Layer mapping used in the
-  6G-RUPA papers.
+  layer has a process inside a system, and `relays` the one place a system
+  forwards (one relay per system, as in the packet walkthrough of
+  content/posts/follow-a-ping-through-the-layers). `step` orders the entrance
+  animation, bottom layer first. Layer names follow that walkthrough: the
+  operator layer (the papers' N Layer) over a radio link and a core link (N−1).
 */ -}}
 {{- $systems := slice
   (dict "name" "UE" "role" "phone")
   (dict "name" "gNB" "role" "base station")
-  (dict "name" "UPF" "role" "core gateway")
+  (dict "name" "GUPF" "role" "core gateway")
   (dict "name" "Host" "role" "server")
 -}}
 {{- $layers := slice
   (dict "kind" "base" "label" "radio" "from" 2 "to" 6 "row" 4 "rows" 1 "step" 0)
   (dict "kind" "base" "label" "transport" "from" 6 "to" 10 "row" 4 "rows" 1 "step" 0)
   (dict "kind" "base" "label" "data network" "from" 11 "to" 14 "row" 2 "rows" 3 "step" 0)
-  (dict "kind" "rupa" "label" "N−1 Layer (radio)" "from" 0 "to" 6 "row" 3 "rows" 1 "step" 1 "nodes" (slice 2 5))
-  (dict "kind" "rupa" "label" "N−1 Layer (core)" "from" 6 "to" 11 "row" 3 "rows" 1 "step" 1 "nodes" (slice 7 10))
-  (dict "kind" "rupa" "label" "N Layer" "from" 0 "to" 11 "row" 2 "rows" 1 "step" 2 "nodes" (slice 2 6 10))
-  (dict "kind" "pdu" "label" "PDU layer (IP, Ethernet)" "from" 0 "to" 16 "row" 1 "rows" 1 "step" 3 "nodes" (slice 2 10 14))
+  (dict "kind" "rupa" "label" "radio link" "from" 0 "to" 6 "row" 3 "rows" 1 "step" 1 "nodes" (slice 2 5))
+  (dict "kind" "rupa" "label" "core link" "from" 6 "to" 11 "row" 3 "rows" 1 "step" 1 "nodes" (slice 7 10))
+  (dict "kind" "rupa" "label" "Operator layer" "from" 0 "to" 11 "row" 2 "rows" 1 "step" 2 "nodes" (slice 2 6 10) "relays" (slice 6))
+  (dict "kind" "pdu" "label" "PDU layer (IP, Ethernet)" "from" 0 "to" 16 "row" 1 "rows" 1 "step" 3 "nodes" (slice 2 10 14) "relays" (slice 10))
 -}}
 <figure class="stack">
   <p class="visually-hidden">
     Four systems from left to right: a phone (UE), a base station (gNB), a core gateway (UPF) and a server in the data network.
-    An N Layer spans the UE, gNB and UPF. Below it, one N−1 Layer connects the UE to the gNB over the radio link, and another connects the gNB to the UPF across the core network.
-    The PDU layer, IP or Ethernet, runs on top from the UE to the server.
+    The operator layer spans the UE, gNB and GUPF, and the gNB relays in it. Below it, a radio link connects the UE to the gNB, and a core link connects the gNB to the GUPF.
+    The PDU layer, IP or Ethernet, runs on top from the UE to the server, and the GUPF relays in it. Each system relays in one layer at most.
   </p>
   <div class="stack__grid" aria-hidden="true">
     {{- range $i, $s := $systems }}
@@ -44,7 +46,7 @@
       <span>{{ .label }}</span>
       {{- range .nodes }}
       {{- $p := div (float (sub . $l.from)) (sub $l.to $l.from) }}
-      <i class="stack__node" style="{{ printf "--p:%.4f" $p | safeCSS }}"></i>
+      <i class="stack__node{{ if in ($l.relays | default slice) . }} stack__node--relay{{ end }}" style="{{ printf "--p:%.4f" $p | safeCSS }}"></i>
       {{- end }}
     </div>
     {{- end }}
@@ -53,19 +55,19 @@
   <dl class="stack__legend">
     <div>
       <dt><span class="swatch swatch--rupa"></span>6G-RUPA layers</dt>
-      <dd>The same kind of layer at different scopes. The N Layer carries the phone’s traffic from UE to UPF with one protocol, EFCP, where 5G splits the job between SDAP/PDCP on the radio side and GTP-U in the core. Beneath it, one N−1 Layer covers the radio hop and another the core network.</dd>
+      <dd>The same kind of layer at different scopes. The operator layer carries the phone’s traffic from UE to GUPF with one protocol, EFCP, where 5G splits the job between SDAP/PDCP on the radio side and GTP-U in the core. Beneath it, a radio link covers the hop to the gNB and a core link the hop to the GUPF.</dd>
     </div>
     <div>
       <dt><span class="swatch swatch--pdu"></span>PDU layer</dt>
       <dd>IP or Ethernet, the connectivity applications see.</dd>
     </div>
     <div>
+      <dt><span class="swatch swatch--relay"></span>Relay</dt>
+      <dd>Where a system forwards: the gNB in the operator layer, the GUPF in the PDU layer. Each system relays in one layer at most.{{ with site.GetPage "/posts/follow-a-ping-through-the-layers" }} <a href="{{ .RelPermalink }}">Understand how this works</a>.{{ end }}</dd>
+    </div>
+    <div>
       <dt><span class="swatch swatch--base"></span>Existing links</dt>
       <dd>Whatever radio, transport and data-network technology is already in place.</dd>
     </div>
   </dl>
-  <figcaption>
-    The mobile user plane drawn as recursive layers. Adapted from
-    {{ with site.GetPage "/posts/understanding-network-slicing" }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ else }}our article on network slicing{{ end }}.
-  </figcaption>
 </figure>
