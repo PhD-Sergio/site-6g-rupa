@@ -1,0 +1,102 @@
+/* Packet walkthrough (layouts/_shortcodes/packet-walk.html).
+   Layer colours follow the layer diagram: the operator's layer is teal, the PDU layer is
+   outlined ink, links are hatched. The internetwork layer and a second operator get their own hues. */
+.pw {
+  --pw-app: #5d6b66; --pw-app-s: var(--paper-2);
+  --pw-pdu: var(--ink); --pw-pdu-s: var(--paper);
+  --pw-f: #5b4fc4; --pw-f-s: #e7e4f8;
+  --pw-na: var(--teal-ink); --pw-na-s: var(--teal-tint);
+  --pw-nb: #a8620b; --pw-nb-s: #f6e5cc;
+  --pw-m: var(--hatch-line); --pw-m-s: var(--paper-2);
+  margin: 2em 0;
+  display: grid;
+  gap: 1rem;
+  font-family: var(--sans);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pw { --pw-app: #9fb0aa; --pw-f: #a99cf2; --pw-f-s: #26224a; --pw-nb: #e7a54f; --pw-nb-s: #3b2a12; }
+}
+:root[data-theme="dark"] .pw { --pw-app: #9fb0aa; --pw-f: #a99cf2; --pw-f-s: #26224a; --pw-nb: #e7a54f; --pw-nb-s: #3b2a12; }
+
+.pw-mount { display: grid; gap: 1rem; padding: 1rem; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); min-width: 0; }
+.pw-addr, .pw-figwrap { overflow-x: auto; }
+.pw-addr table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.82rem; }
+.pw-addr th, .pw-addr td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--rule); font-family: var(--mono); font-weight: 400; }
+.pw-addr th { font-family: var(--sans); font-weight: 650; }
+.pw-addr__layer { font-family: var(--sans) !important; font-weight: 650 !important; }
+.pw-c-pdu { color: var(--pw-pdu); } .pw-c-f { color: var(--pw-f); } .pw-c-na { color: var(--pw-na); }
+
+/* figure */
+.pw-fig { display: block; width: 100%; min-width: 66rem; height: auto; }
+.pw-fig text { fill: var(--ink); font-family: var(--sans); }
+.pw-name { font-weight: 700; font-size: 15px; }
+.pw-role { font-size: 11px; fill: var(--muted) !important; font-style: italic; }
+.pw-lab { font-family: var(--mono) !important; font-size: 11px; }
+.pw-sub { font-size: 10px; fill: var(--muted) !important; }
+.pw-iface { font-family: var(--mono) !important; font-size: 11px; fill: var(--muted) !important; }
+.pw-bandlab { font-size: 10.5px; font-weight: 650; }
+.pw-sys { fill: transparent; stroke: var(--rule); stroke-width: 1.4; }
+.pw-col { cursor: pointer; outline: none; }
+.pw-col:hover .pw-sys { stroke: var(--muted); }
+.pw-col:focus-visible .pw-sys { stroke: var(--teal); stroke-width: 3; }
+.pw-col.pw-on .pw-sys { stroke: var(--ink); stroke-width: 2.5; }
+.pw-band rect { stroke: none; opacity: 0.32; }
+.pw-b-app rect { fill: var(--pw-app); opacity: 0.12; } .pw-b-app text { fill: var(--pw-app) !important; }
+.pw-b-pdu rect { fill: var(--pw-pdu); opacity: 0.08; } .pw-b-pdu text { fill: var(--pw-pdu) !important; }
+.pw-b-f rect { fill: var(--pw-f-s); } .pw-b-f text { fill: var(--pw-f) !important; }
+.pw-b-na rect { fill: var(--pw-na-s); } .pw-b-na text { fill: var(--pw-na) !important; }
+.pw-b-nb rect { fill: var(--pw-nb-s); } .pw-b-nb text { fill: var(--pw-nb) !important; }
+.pw-b-m rect { fill: var(--hatch); opacity: 0.6; } .pw-b-m text { fill: var(--muted) !important; }
+.pw-fig [class^="pw-k-"] { stroke-width: 1.4; transition: opacity 0.2s; }
+.pw-fig .pw-k-app { fill: var(--pw-app-s); stroke: var(--pw-app); stroke-dasharray: 4 3; }
+.pw-fig .pw-k-pdu { fill: var(--pw-pdu-s); stroke: var(--pw-pdu); }
+.pw-fig .pw-k-f { fill: var(--pw-f-s); stroke: var(--pw-f); }
+.pw-fig .pw-k-na { fill: var(--pw-na-s); stroke: var(--pw-na); }
+.pw-fig .pw-k-nb { fill: var(--pw-nb-s); stroke: var(--pw-nb); }
+.pw-fig .pw-k-m { fill: var(--pw-m-s); stroke: var(--pw-m); }
+.pw-fig rect.pw-relay { stroke: var(--ink); stroke-width: 3; }
+.pw-walking [data-cell] { opacity: 0.4; }
+.pw-walking [data-cell].pw-lit { opacity: 1; }
+.pw-l-app, .pw-l-pdu, .pw-l-f, .pw-l-na { fill: none; stroke-width: 2; }
+.pw-l-app { stroke: var(--pw-app); stroke-dasharray: 4 3; } .pw-l-pdu { stroke: var(--pw-pdu); }
+.pw-l-f { stroke: var(--pw-f); } .pw-l-na { stroke: var(--pw-na); }
+.pw-wire { fill: none; stroke: var(--muted); stroke-width: 3.5; stroke-linecap: round; opacity: 0.6; }
+.pw-seg { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; opacity: 0; }
+.pw-seg.pw-done { opacity: 0.5; }
+.pw-seg.pw-now { opacity: 1; stroke-width: 4; }
+.pw-dot { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
+@media (prefers-reduced-motion: no-preference) { .pw-dot { transition: cx 0.35s ease, cy 0.35s ease; } }
+.pw-hint { margin: 0; font-size: 0.82rem; color: var(--muted); }
+
+/* the box and the packet */
+.pw-work { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 1.25rem; }
+@media (max-width: 46rem) { .pw-work { grid-template-columns: 1fr; } }
+.pw-h { margin: 0; font-size: 1rem; font-weight: 700; }
+.pw-box .pw-sub, .pw-packet .pw-sub { margin: 0.1rem 0 0; font-size: 0.82rem; color: var(--muted); font-family: var(--sans); }
+.pw-sub--gap { margin-top: 0.8rem !important; margin-bottom: 0.4rem !important; }
+.pw-stack { display: grid; gap: 0.4rem; margin-top: 0.6rem; }
+.pw-cell { display: grid; grid-template-columns: auto 1fr; gap: 0.6rem; align-items: center; padding: 0.5rem 0.65rem; border: 1.5px solid; border-radius: 8px; font-size: 0.84rem; line-height: 1.35; }
+.pw-cell__name { font-family: var(--mono); }
+.pw-cell--relay { border-width: 3px; border-color: var(--ink) !important; }
+.pw-tag { font-size: 0.74rem; border: 1px solid currentColor; border-radius: 99px; padding: 0 0.5rem; white-space: nowrap; }
+.pw-env { border: 1.5px solid; border-radius: 8px; padding: 0.35rem 0.5rem 0.5rem; display: grid; gap: 0.35rem; font-size: 0.78rem; }
+.pw-env__lbl { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; font-family: var(--mono); }
+.pw-env__st { font-family: var(--sans); font-weight: 650; }
+.pw-env--sealed { border-style: dashed; opacity: 0.55; }
+.pw-env--read { border-width: 3px; }
+.pw-env--data { font-family: var(--mono); }
+.pw-k-app { border-color: var(--pw-app); background: var(--pw-app-s); }
+.pw-k-pdu { border-color: var(--pw-pdu); background: var(--pw-pdu-s); }
+.pw-k-f { border-color: var(--pw-f); background: var(--pw-f-s); }
+.pw-k-na { border-color: var(--pw-na); background: var(--pw-na-s); }
+.pw-k-nb { border-color: var(--pw-nb); background: var(--pw-nb-s); }
+.pw-k-m { border-color: var(--pw-m); background: var(--pw-m-s); }
+.pw-words { display: grid; gap: 0.6rem; max-width: 40rem; font-family: var(--serif); font-size: 1rem; line-height: 1.55; }
+.pw-words p { margin: 0; }
+.pw-words code { font-family: var(--mono); font-size: 0.9em; }
+.pw-nav { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.pw-btn { font: inherit; font-weight: 650; padding: 0.45rem 1rem; border-radius: 8px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; }
+.pw-btn--ghost { background: transparent; color: var(--ink); }
+.pw-btn:disabled { opacity: 0.35; cursor: default; }
+.pw-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.pw-count { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }

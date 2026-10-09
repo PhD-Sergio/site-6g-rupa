@@ -1,0 +1,24 @@
+{{- /*
+  An interactive walkthrough of one packet through a layered path.
+  Usage: {{< packet-walk src="one-operator.json" caption="..." >}}
+  The JSON (a page resource) holds the figure as SVG plus the steps; it is built by
+  tools/packet-walk/build.py (python3 tools/packet-walk/build.py content/posts/<post>). The script and styles load once per page.
+*/ -}}
+{{- $src := .Get "src" }}
+{{- $res := .Page.Resources.Get $src }}
+{{- if not $res }}{{ errorf "packet-walk: %s not found in %s" $src .Page.File.Path }}{{ end }}
+{{- if not (.Page.Store.Get "packetWalkAssets") }}
+{{- .Page.Store.Set "packetWalkAssets" true }}
+{{- $css := resources.Get "css/packet-walk.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{- $js := resources.Get "js/packet-walk.js" | minify | fingerprint }}
+<script defer src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{- end }}
+<figure class="pw">
+  <script type="application/json">{{ $res.Content | safeJS }}</script>
+  <div class="pw-mount"></div>
+  {{- with .Get "caption" }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+  <noscript><p>This walkthrough needs JavaScript.</p></noscript>
+</figure>
